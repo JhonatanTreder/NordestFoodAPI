@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36616.10 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NordesteFoodAPI", "NordesteFoodAPI.csproj", "{C91F0C42-B2D2-4822-9B2B-94DA6A7F9DBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C91F0C42-B2D2-4822-9B2B-94DA6A7F9DBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C91F0C42-B2D2-4822-9B2B-94DA6A7F9DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C91F0C42-B2D2-4822-9B2B-94DA6A7F9DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C91F0C42-B2D2-4822-9B2B-94DA6A7F9DBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F37C959C-3314-491D-8C4A-A3A79D427ED2}
+	EndGlobalSection
+EndGlobal

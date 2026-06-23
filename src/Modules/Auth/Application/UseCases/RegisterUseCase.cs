@@ -1,38 +1,37 @@
-﻿using NordesteFoodAPI.Modules.Auth.Domain.Contracts;
+﻿using Microsoft.AspNetCore.Identity;
+using NordesteFoodAPI.Modules.Auth.Application.Exceptions;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Register;
-using NordesteFoodAPI.Modules.Auth.Domain.Entities;
-using NordesteFoodAPI.Modules.Auth.Domain.ValueObjects;
+using NordesteFoodAPI.Modules.Auth.Domain.Enums;
+using NordesteFoodAPI.Shared.Infraestructure.Identity;
 
 namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
 {
     public class RegisterUseCase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RegisterUseCase(IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public RegisterUseCase(UserManager<ApplicationUser> userManager)
         {
-            _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
+            _userManager = userManager;
         }
 
         public async Task<Guid> Register(RegisterUserRequestDTO registerUserDTO)
         {
-            var email = Email.Create(registerUserDTO.Email);
-            var username = Username.Create(registerUserDTO.Username);
-            var password = Password.Create(registerUserDTO.Password);
-            var phoneNumber = PhoneNumber.Create(registerUserDTO.PhoneNumber);
+            var newUser = new ApplicationUser
+            {
+                UserName = registerUserDTO.Username,
+                Email = registerUserDTO.Email,
+                PhoneNumber = registerUserDTO.PhoneNumber,
+                Name = registerUserDTO.Username,
+                CreatedAt = DateTime.UtcNow
+            };
 
-            var existingUser = await _userRepository.ExistsUserByEmailAsync(email.Value);
+            var result = await _userManager.CreateAsync(newUser, registerUserDTO.Password);
 
-            if (existingUser) 
-                throw new ApplicationException("O usuário com este Email já existe.");
+            if (!result.Succeeded)
+                throw new ApplicationLayerException(string.Join("; ", result.Errors.Select(e => e.Description)));
 
-            var passwordHash = _passwordHasher.Hash(password.Value);
-
-            var newUser = User.Register(username, email, password, phoneNumber);
-
-            await _userRepository.SaveAsync(newUser);
+            await _userManager.AddToRoleAsync(newUser, UserRole.Client.ToString().ToUpper());
 
             return newUser.Id;
         }

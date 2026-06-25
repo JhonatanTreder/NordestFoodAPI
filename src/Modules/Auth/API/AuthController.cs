@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using NordesteFoodAPI.Modules.Auth.Application.UseCases;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Login;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Register;
+using NordesteFoodAPI.Shared.API.Responses;
+using NordesteFoodAPI.Shared.Infraestructure.Results;
 using System.Threading.Tasks;
 
 namespace NordesteFoodAPI.Modules.Auth.API
@@ -21,6 +23,10 @@ namespace NordesteFoodAPI.Modules.Auth.API
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequest)
         {
             var loginResponse = await _loginUseCase.Login(loginRequest);
@@ -29,14 +35,37 @@ namespace NordesteFoodAPI.Modules.Auth.API
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register(RegisterUserRequestDTO registerRequest)
         {
-            var registerResponse = await _registerUseCase.Register(registerRequest);
+            var result = await _registerUseCase.Register(registerRequest);
 
-            return Ok(new
+            if (!result.IsSuccess)
             {
-                Message = "Usuário registrado com sucesso",
-                UserId = registerResponse.ToString()
+                var statusCode = result.ErrorType switch
+                {
+                    ErrorType.Conflict => StatusCodes.Status409Conflict,
+                    ErrorType.CreateConflict => StatusCodes.Status400BadRequest,
+                    ErrorType.UnexpectedFailure => StatusCodes.Status500InternalServerError,
+                    _ => StatusCodes.Status500InternalServerError
+                };
+
+                return StatusCode(statusCode, new ApiResponse<Guid?>
+                {
+                    Status = statusCode,
+                    Data = null,
+                    Message = result.ErrorMessage!
+                });
+            }
+
+            return StatusCode(StatusCodes.Status201Created, new ApiResponse<Guid>
+            {
+                Status = StatusCodes.Status201Created,
+                Data = result.Value,
+                Message = "Usuário criado com sucesso"
             });
         }
     }

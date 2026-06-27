@@ -33,10 +33,22 @@ namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.Persistence.Reposi
             return Result<CreateRestaurantResponseDTO>.Success(createResponse);
         }
 
+        public async Task<Restaurant?> FindByIdAsync(Guid restaurantId)
+        {
+            return await _dbContext.Restaurants.FindAsync(restaurantId);
+        }
+
         public async Task<Restaurant?> FindByNameAsync(string restaurantName)
         {
             return await _dbContext.Restaurants
                 .FirstOrDefaultAsync(r => r.ComercialName.Value == restaurantName);
+        }
+
+        public async Task<IEnumerable<Restaurant?>> FindRestaurantsAsync()
+        {
+            return await _dbContext.Restaurants
+                .Where(r => r.IsActive)
+                .ToListAsync();
         }
     }
 }

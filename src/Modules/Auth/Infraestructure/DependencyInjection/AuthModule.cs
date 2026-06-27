@@ -2,7 +2,7 @@
 using NordesteFoodAPI.Modules.Auth.Domain.Contracts;
 using NordesteFoodAPI.Modules.Auth.Infraestructure.Services;
 
-namespace NordesteFoodAPI.Modules.Auth.Infraestructure
+namespace NordesteFoodAPI.Modules.Auth.Infraestructure.DependencyInjection
 {
     public static class AuthModule
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using NordesteFoodAPI.Modules.Auth.Application.Exceptions;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Register;
-using NordesteFoodAPI.Modules.Auth.Domain.Enums;
+using NordesteFoodAPI.Shared.Domain.Enums;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
+using NordesteFoodAPI.Shared.Infraestructure.Results;
 
 namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
 {
@@ -15,7 +15,7 @@ namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
             _userManager = userManager;
         }
 
-        public async Task<Guid> Register(RegisterUserRequestDTO registerUserDTO)
+        public async Task<Result<Guid>> Register(RegisterUserRequestDTO registerUserDTO)
         {
             var newUser = new ApplicationUser
             {
@@ -26,14 +26,30 @@ namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
                 CreatedAt = DateTime.UtcNow
             };
 
-            var result = await _userManager.CreateAsync(newUser, registerUserDTO.Password);
+            var existingUserByEmail = await _userManager.FindByEmailAsync(registerUserDTO.Email);
 
-            if (!result.Succeeded)
-                throw new ApplicationLayerException(string.Join("; ", result.Errors.Select(e => e.Description)));
+            if (existingUserByEmail is not null)
+            {
+                return Result<Guid>.Failure($"Erro ao criar o usuário: O E-mail {registerUserDTO.Email} já existe.", ErrorType.Conflict);
+            }
 
-            await _userManager.AddToRoleAsync(newUser, UserRole.Client.ToString().ToUpper());
+            var createResult = await _userManager.CreateAsync(newUser, registerUserDTO.Password);
 
-            return newUser.Id;
+            if (!createResult.Succeeded)
+            {
+                var errorMessage = string.Join("; ", createResult.Errors.Select(e => e.Description));
+                return Result<Guid>.Failure(errorMessage, ErrorType.CreateConflict);
+            }
+
+            var assignRoleResult = await _userManager.AddToRoleAsync(newUser, UserRole.Client.ToString().ToUpper());
+
+            if (!assignRoleResult.Succeeded)
+            {
+                var errorMessage = string.Join("; ", assignRoleResult.Errors.Select(e => e.Description));
+                return Result<Guid>.Failure($"O usuário foi criado, mas houve uma falha ao atribuir à role: {errorMessage}", ErrorType.UnexpectedFailure);
+            }
+
+            return Result<Guid>.Success(newUser.Id);
         }
     }
 }

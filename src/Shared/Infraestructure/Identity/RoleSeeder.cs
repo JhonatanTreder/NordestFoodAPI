@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using NordesteFoodAPI.Modules.Auth.Domain.Enums;
+using NordesteFoodAPI.Shared.Domain.Enums;
 
 namespace NordesteFoodAPI.Shared.Infraestructure.Identity
 {

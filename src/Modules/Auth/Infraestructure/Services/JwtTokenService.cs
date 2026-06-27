@@ -1,6 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using NordesteFoodAPI.Modules.Auth.Domain.Contracts;
-using NordesteFoodAPI.Modules.Auth.Domain.Enums;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;

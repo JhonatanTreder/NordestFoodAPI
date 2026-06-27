@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using NordesteFoodAPI.Modules.Auth.Application.Exceptions;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Register;
-using NordesteFoodAPI.Modules.Auth.Domain.Enums;
+using NordesteFoodAPI.Shared.Domain.Enums;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 using NordesteFoodAPI.Shared.Infraestructure.Results;
 

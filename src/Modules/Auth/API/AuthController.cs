@@ -53,10 +53,9 @@ namespace NordesteFoodAPI.Modules.Auth.API
                     _ => StatusCodes.Status500InternalServerError
                 };
 
-                return StatusCode(statusCode, new ApiResponse<Guid?>
+                return StatusCode(statusCode, new ApiResponse
                 {
                     Status = statusCode,
-                    Data = null,
                     Message = result.ErrorMessage!
                 });
             }

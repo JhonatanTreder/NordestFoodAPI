@@ -1,4 +1,4 @@
-﻿namespace NordesteFoodAPI.Modules.Auth.Domain.Enums
+﻿namespace NordesteFoodAPI.Shared.Domain.Enums
 {
     public enum UserRole
     {

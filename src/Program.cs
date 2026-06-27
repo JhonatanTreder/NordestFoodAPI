@@ -2,17 +2,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NordesteFoodAPI.Modules.Auth.Infraestructure;
+using NordesteFoodAPI.Modules.Auth.Infraestructure.DependencyInjection;
+using NordesteFoodAPI.Modules.Restaurants.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -34,7 +33,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
+//Módulos existentes no projeto
 builder.Services.AddAuthModule();
+builder.Services.AddRestaurantModule();
 
 builder.Services.AddAuthentication(options =>
 {

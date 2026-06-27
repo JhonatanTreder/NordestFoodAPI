@@ -8,5 +8,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.Domain.Contracts
     {
         Task<Result<CreateRestaurantResponseDTO>> CreateRestaurantAsync(Restaurant restaurant);
         Task<Restaurant?> FindByNameAsync(string restaurantName);
+        Task<Restaurant?> FindByIdAsync(Guid restaurantId);
+        Task<IEnumerable<Restaurant?>> FindRestaurantsAsync();
     }
 }

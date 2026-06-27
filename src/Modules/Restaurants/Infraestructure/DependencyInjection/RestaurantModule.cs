@@ -9,7 +9,11 @@ namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.DependencyInjectio
         public static IServiceCollection AddRestaurantModule(this IServiceCollection services)
         {
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+
             services.AddScoped<CreateRestaurantUseCase>();
+            services.AddScoped<GetRestaurantByIdUseCase>();
+            services.AddScoped<GetRestaurantByNameUseCase>();
+            services.AddScoped<GetAllRestaurantsUseCase>();
 
             return services;
         }

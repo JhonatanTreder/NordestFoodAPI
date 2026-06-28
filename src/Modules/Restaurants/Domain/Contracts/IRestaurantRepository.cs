@@ -1,6 +1,6 @@
 ﻿using NordesteFoodAPI.Modules.Restaurants.Domain.DTOs;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
+using NordesteFoodAPI.Shared.Common.Results;
 
 namespace NordesteFoodAPI.Modules.Restaurants.Domain.Contracts
 {
@@ -8,5 +8,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.Domain.Contracts
     {
         Task<Result<CreateRestaurantResponseDTO>> CreateRestaurantAsync(Restaurant restaurant);
         Task<Restaurant?> FindByNameAsync(string restaurantName);
+        Task<Restaurant?> FindByIdAsync(Guid restaurantId);
+        Task<IEnumerable<Restaurant?>> FindRestaurantsAsync();
     }
 }

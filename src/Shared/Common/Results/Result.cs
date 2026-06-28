@@ -1,4 +1,4 @@
-﻿namespace NordesteFoodAPI.Shared.Infraestructure.Results
+﻿namespace NordesteFoodAPI.Shared.Common.Results
 {
     public class Result
     {

@@ -4,7 +4,7 @@ using NordesteFoodAPI.Modules.Auth.Application.UseCases;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Login;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Register;
 using NordesteFoodAPI.Shared.API.Responses;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
+using NordesteFoodAPI.Shared.Common.Results;
 using System.Threading.Tasks;
 
 namespace NordesteFoodAPI.Modules.Auth.API

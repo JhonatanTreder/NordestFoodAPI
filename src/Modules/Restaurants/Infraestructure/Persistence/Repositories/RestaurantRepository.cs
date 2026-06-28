@@ -2,8 +2,8 @@
 using NordesteFoodAPI.Modules.Restaurants.Domain.Contracts;
 using NordesteFoodAPI.Modules.Restaurants.Domain.DTOs;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
+using NordesteFoodAPI.Shared.Common.Results;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
 
 namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.Persistence.Repositories
 {
@@ -33,10 +33,22 @@ namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.Persistence.Reposi
             return Result<CreateRestaurantResponseDTO>.Success(createResponse);
         }
 
+        public async Task<Restaurant?> FindByIdAsync(Guid restaurantId)
+        {
+            return await _dbContext.Restaurants.FindAsync(restaurantId);
+        }
+
         public async Task<Restaurant?> FindByNameAsync(string restaurantName)
         {
             return await _dbContext.Restaurants
                 .FirstOrDefaultAsync(r => r.ComercialName.Value == restaurantName);
+        }
+
+        public async Task<IEnumerable<Restaurant?>> FindRestaurantsAsync()
+        {
+            return await _dbContext.Restaurants
+                .Where(r => r.IsActive)
+                .ToListAsync();
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using NordesteFoodAPI.Modules.Products.Domain.Entities;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
+using NordesteFoodAPI.Modules.UnitProducts.Domain.Entities;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 
 namespace NordesteFoodAPI.Shared.Infraestructure.Persistence
@@ -11,6 +13,8 @@ namespace NordesteFoodAPI.Shared.Infraestructure.Persistence
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Restaurant> Restaurants => Set<Restaurant>();
+        public DbSet<Product> Products => Set<Product>();
+        public DbSet<UnitProduct> UnitProducts => Set<UnitProduct>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

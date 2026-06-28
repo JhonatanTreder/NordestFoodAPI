@@ -4,9 +4,9 @@ using NordesteFoodAPI.Modules.Restaurants.Infraestructure.Persistence.Repositori
 
 namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.DependencyInjection
 {
-    public static class RestaurantModule
+    public static class RestaurantsModule
     {
-        public static IServiceCollection AddRestaurantModule(this IServiceCollection services)
+        public static IServiceCollection AddRestaurantsModule(this IServiceCollection services)
         {
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 

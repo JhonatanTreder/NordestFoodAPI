@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NordesteFoodAPI.Modules.Restaurants.Application.UseCases;
 using NordesteFoodAPI.Modules.Restaurants.Domain.DTOs;
-using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
 using NordesteFoodAPI.Shared.API.Responses;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
+using NordesteFoodAPI.Shared.Common.Results;
 
 namespace NordesteFoodAPI.Modules.Restaurants.API
 {
@@ -37,7 +35,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateRestaurantAsync([FromBody] CreateRestaurantRequestDTO createRestaurantDTO)
         {
-            var result = await _createRestaurantUseCase.Create(createRestaurantDTO);
+            var result = await _createRestaurantUseCase.CreateAsync(createRestaurantDTO);
 
             if (!result.IsSuccess)
             {

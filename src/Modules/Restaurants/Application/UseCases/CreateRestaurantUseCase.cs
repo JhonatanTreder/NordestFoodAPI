@@ -2,7 +2,7 @@
 using NordesteFoodAPI.Modules.Restaurants.Domain.DTOs;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
 using NordesteFoodAPI.Modules.Restaurants.Domain.ValueObjects;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
+using NordesteFoodAPI.Shared.Common.Results;
 
 namespace NordesteFoodAPI.Modules.Restaurants.Application.UseCases
 {
@@ -14,7 +14,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.Application.UseCases
             _restaurantRepository = restaurantRepository;
         }
 
-        public async Task<Result<CreateRestaurantResponseDTO>> Create(CreateRestaurantRequestDTO createRestaurantDTO)
+        public async Task<Result<CreateRestaurantResponseDTO>> CreateAsync(CreateRestaurantRequestDTO createRestaurantDTO)
         {
             if (!TimeOnly.TryParse(createRestaurantDTO.OpeningTime, out var openingTime) ||
                 !TimeOnly.TryParse(createRestaurantDTO.ClosingTime, out var closingTime))

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using NordesteFoodAPI.Modules.Auth.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Products.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Restaurants.Infraestructure.DependencyInjection;
+using NordesteFoodAPI.Modules.UnitProducts.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
 using System.Text;
@@ -38,6 +39,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 builder.Services.AddAuthModule();
 builder.Services.AddRestaurantsModule();
 builder.Services.AddProductsModule();
+builder.Services.AddUnitProductModule();
 
 builder.Services.AddAuthentication(options =>
 {

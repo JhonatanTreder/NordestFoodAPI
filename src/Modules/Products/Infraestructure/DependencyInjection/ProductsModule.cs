@@ -10,6 +10,7 @@ namespace NordesteFoodAPI.Modules.Products.Infraestructure.DependencyInjection
         {
             services.AddScoped<IProductsRepository, ProductsRepository>();
             services.AddScoped<CreateProductUseCase>();
+            services.AddScoped<GetProductByIdUseCase>();
 
             return services;
         }

@@ -17,6 +17,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.Application.UseCases
         public async Task<Result<RestaurantResponseDTO>> FindByIdAsync(Guid id)
         {
             var restaurant = await _restaurantRepository.FindByIdAsync(id);
+
             if (restaurant is null)
             {
                 return Result<RestaurantResponseDTO>.Failure(

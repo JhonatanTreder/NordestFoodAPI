@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NordesteFoodAPI.Modules.Auth.Infraestructure.DependencyInjection;
+using NordesteFoodAPI.Modules.Products.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Restaurants.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
@@ -35,7 +36,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 
 //Módulos existentes no projeto
 builder.Services.AddAuthModule();
-builder.Services.AddRestaurantModule();
+builder.Services.AddRestaurantsModule();
+builder.Services.AddProductsModule();
 
 builder.Services.AddAuthentication(options =>
 {

@@ -1,6 +1,6 @@
 ﻿using NordesteFoodAPI.Modules.Restaurants.Domain.DTOs;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
+using NordesteFoodAPI.Shared.Common.Results;
 
 namespace NordesteFoodAPI.Modules.Restaurants.Domain.Contracts
 {

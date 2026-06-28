@@ -2,8 +2,8 @@
 using NordesteFoodAPI.Modules.Restaurants.Domain.Contracts;
 using NordesteFoodAPI.Modules.Restaurants.Domain.DTOs;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
+using NordesteFoodAPI.Shared.Common.Results;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
 
 namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.Persistence.Repositories
 {

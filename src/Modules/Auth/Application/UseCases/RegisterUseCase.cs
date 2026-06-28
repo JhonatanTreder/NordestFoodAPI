@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Register;
+using NordesteFoodAPI.Shared.Common.Results;
 using NordesteFoodAPI.Shared.Domain.Enums;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
-using NordesteFoodAPI.Shared.Infraestructure.Results;
 
 namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
 {

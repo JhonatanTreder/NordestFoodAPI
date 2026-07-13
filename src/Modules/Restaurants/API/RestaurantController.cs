@@ -33,7 +33,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateRestaurantAsync([FromBody] CreateRestaurantRequestDTO createRestaurantDTO)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateRestaurantRequestDTO createRestaurantDTO)
         {
             var result = await _createRestaurantUseCase.CreateAsync(createRestaurantDTO);
 
@@ -66,7 +66,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByName(string comercialName)
+        public async Task<IActionResult> GetByNameAsync(string comercialName)
         {
             var result = await _getRestaurantByNameUseCase.Get(comercialName);
 
@@ -98,7 +98,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var result = await _getRestaurantByIdUseCase.FindByIdAsync(id);
 

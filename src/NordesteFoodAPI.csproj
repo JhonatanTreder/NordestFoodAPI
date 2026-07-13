@@ -6,9 +6,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		
 		<!-- Versionamento do Projeto -->
-		<Version>1.5.0</Version>
-		<AssemblyVersion>1.5.0.0</AssemblyVersion>
-		<FileVersion>1.5.0.0</FileVersion>
+		<Version>1.7.0</Version>
+		<AssemblyVersion>1.7.0.0</AssemblyVersion>
+		<FileVersion>1.7.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -30,8 +30,6 @@
 		<Folder Include="Modules\Auth\Domain\Entities\" />
 		<Folder Include="Modules\Auth\Infraestructure\Persistence\Repositories\" />
 		<Folder Include="Modules\Auth\Infraestructure\Security\" />
-		<Folder Include="Modules\UnitProducts\Application\" />
-		<Folder Include="Modules\UnitProducts\Domain\DTOs\" />
 		<Folder Include="Shared\Application\" />
 	</ItemGroup>
 

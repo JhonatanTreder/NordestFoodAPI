@@ -1,7 +1,4 @@
-﻿using NordesteFoodAPI.Modules.Products.Domain.Entities;
-using NordesteFoodAPI.Modules.Products.Domain.ValueObjects;
-using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
-using NordesteFoodAPI.Modules.UnitProducts.Domain.ValueObjects;
+﻿using NordesteFoodAPI.Modules.UnitProducts.Domain.ValueObjects;
 
 namespace NordesteFoodAPI.Modules.UnitProducts.Domain.Entities
 {

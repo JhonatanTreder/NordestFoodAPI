@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using NordesteFoodAPI.Modules.Auth.Infraestructure.DependencyInjection;
+using NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.DependencyInjection;
 using NordesteFoodAPI.Modules.Products.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Restaurants.Infraestructure.DependencyInjection;
+using NordesteFoodAPI.Modules.UnitProducts.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
 using System.Text;
@@ -14,7 +17,40 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "NordesteFood API",
+        Version = "v1"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Informe o token JWT.\n\nExemplo: Bearer eyJhbGciOiJIUzI1NiIs...",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -38,6 +74,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 builder.Services.AddAuthModule();
 builder.Services.AddRestaurantsModule();
 builder.Services.AddProductsModule();
+builder.Services.AddUnitProductModule();
+builder.Services.AddOrderModule();
 
 builder.Services.AddAuthentication(options =>
 {

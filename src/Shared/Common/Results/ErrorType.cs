@@ -2,12 +2,14 @@
 {
     public enum ErrorType
     {
-        None = 0,
-        ValidationError = 1,
-        CreateConflict = 2,
-        Conflict = 3,
-        NotFound = 4,
-        Unauthorized = 5,
-        UnexpectedFailure = 6
+        None,
+        ValidationError,
+        CreateConflict,
+        Conflict,
+        NotFound,
+        Unauthorized,
+        UnexpectedFailure,
+        Failure,
+        DatabaseError
     }
 }

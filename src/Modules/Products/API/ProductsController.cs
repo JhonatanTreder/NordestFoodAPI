@@ -24,7 +24,7 @@ namespace NordesteFoodAPI.Modules.Products.API
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] CreateProductRequestDTO productRequestDTO)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateProductRequestDTO productRequestDTO)
         {
             var result = await _createProductUseCase.CreateAsync(productRequestDTO);
 

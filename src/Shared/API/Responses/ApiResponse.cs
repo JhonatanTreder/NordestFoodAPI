@@ -7,13 +7,13 @@ namespace NordesteFoodAPI.Shared.API.Responses
         [JsonPropertyOrder(1)]
         public int Status { get; set; }
 
-        [JsonPropertyOrder(3)]
+        [JsonPropertyOrder(2)]
         public string Message { get; set; } = string.Empty;
     }
 
     public class  ApiResponse<T> : ApiResponse
     {
-        [JsonPropertyOrder(2)]
+        [JsonPropertyOrder(3)]
         public T? Data { get; set; }
     }
 }

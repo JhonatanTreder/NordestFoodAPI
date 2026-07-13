@@ -33,7 +33,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateRestaurantAsync([FromBody] CreateRestaurantRequestDTO createRestaurantDTO)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateRestaurantRequestDTO createRestaurantDTO)
         {
             var result = await _createRestaurantUseCase.CreateAsync(createRestaurantDTO);
 

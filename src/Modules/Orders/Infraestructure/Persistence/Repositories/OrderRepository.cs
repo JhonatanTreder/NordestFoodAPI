@@ -3,7 +3,6 @@ using NordesteFoodAPI.Modules.Orders.Domain.Contracts;
 using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Shared.Common.Results;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
-using System.Data.Common;
 
 namespace NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.Repositories
 {
@@ -52,10 +51,28 @@ namespace NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.Repositorie
 
                 return Result<Order>.Success(order);
             }
-            catch (DbUpdateException ex)
+            catch (Exception ex)
             {
                 return Result<Order>.Failure(
                     $"Erro ao criar o pedido: {ex.Message}",
+                    ErrorType.DatabaseError
+                );
+            }
+        }
+
+        public async Task<Result<Order>> UpdateAsync(Order order)
+        {
+            try
+            {
+                _dbContext.Orders.Update(order);
+                await _dbContext.SaveChangesAsync();
+
+                return Result<Order>.Success(order);
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result<Order>.Failure(
+                    $"Ocorreu um erro ao tentar atualizar o pedido: {ex.Message}",
                     ErrorType.DatabaseError
                 );
             }

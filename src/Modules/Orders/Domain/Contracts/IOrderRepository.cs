@@ -7,5 +7,6 @@ namespace NordesteFoodAPI.Modules.Orders.Domain.Contracts
     {
         Task<Result<Order>> CreateAsync(Order order);
         Task<Result<Order>> FindByIdAsync(Guid orderId);
+        Task<Result<Order>> UpdateAsync(Order order);
     }
 }

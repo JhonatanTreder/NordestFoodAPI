@@ -45,5 +45,11 @@ namespace NordesteFoodAPI.Modules.Orders.Domain.Entities
 
             UpdatedAt = DateTime.UtcNow;
         }
+
+        public void ConfirmPayment()
+        {
+            OrderStatus = OrderStatus.PagamentoConfirmado;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

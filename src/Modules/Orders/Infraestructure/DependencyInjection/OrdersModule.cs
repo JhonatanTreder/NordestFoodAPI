@@ -3,7 +3,7 @@ using NordesteFoodAPI.Modules.Orders.Domain.Contracts;
 using NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.Repositories;
 using System.Runtime.CompilerServices;
 
-namespace NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.DependencyInjection
+namespace NordesteFoodAPI.Modules.Orders.Infraestructure.DependencyInjection
 {
     public static class OrdersModule
     {

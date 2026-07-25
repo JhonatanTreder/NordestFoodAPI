@@ -28,11 +28,14 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
 
         public async Task<Result<OrderResponseDTO>> CreateAsync(CreateOrderRequestDTO orderRequestDTO, Guid userId)
         {
-            var conversioResult = Enum.TryParse<OrderChannel>(orderRequestDTO.OrderChannel, true, out var orderChannel);
+            var isSuccessConversionResult = Enum.TryParse<OrderChannel>(orderRequestDTO.OrderChannel, true, out var orderChannel);
 
-            if (conversioResult is false)
+            if (isSuccessConversionResult is false)
             {
-                return Result<OrderResponseDTO>.Failure("Não foi possível realizar a conversão do canal do pedido.", ErrorType.ValidationError);
+                return Result<OrderResponseDTO>.Failure(
+                    $"Não foi possível realizar a conversão do canal do pedido '{orderRequestDTO.OrderChannel}'",
+                    ErrorType.ValidationError
+                );
             }
 
             var resturantExists = await _restaurantRepository.FindByIdAsync(orderRequestDTO.RestaurantId);

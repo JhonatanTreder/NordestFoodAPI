@@ -1,14 +1,13 @@
 ﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.Order;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.OrderItem;
-using NordesteFoodAPI.Modules.Orders.Domain.ValueObjects;
 using NordesteFoodAPI.Shared.Common.Results;
 
 namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
 {
     public class GetOrderByIdUseCase
     {
-        public readonly IOrderRepository _orderRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public GetOrderByIdUseCase(IOrderRepository orderRepository)
         {

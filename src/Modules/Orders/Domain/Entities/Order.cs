@@ -51,5 +51,49 @@ namespace NordesteFoodAPI.Modules.Orders.Domain.Entities
             OrderStatus = OrderStatus.PagamentoConfirmado;
             UpdatedAt = DateTime.UtcNow;
         }
+
+        public void StartPreparation()
+        {
+            if (OrderStatus != OrderStatus.PagamentoConfirmado)
+            {
+                throw new DomainLayerException("Um pedido precisa estar com o pagamento confirmado para iniciar o preparo.");
+            }
+
+            OrderStatus = OrderStatus.EmPreparo;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void MarkAsReady()
+        {
+            if (OrderStatus != OrderStatus.EmPreparo)
+            {
+                throw new DomainLayerException("Um pedido precisa estar em preparo para ser marcado como pronto.");
+            }
+
+            OrderStatus = OrderStatus.Pronto;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void MarkAsdelivered()
+        {
+            if (OrderStatus != OrderStatus.Pronto)
+            {
+                throw new DomainLayerException("Um pedido precisa estar pronto para ser marcado como entregue.");
+            }
+
+            OrderStatus = OrderStatus.Entregue;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void Cancel()
+        {
+            if (OrderStatus == OrderStatus.Entregue || OrderStatus == OrderStatus.Cancelado)
+            {
+                throw new DomainLayerException("Um pedido que já foi cancelado ou já foi entregue não pode ser marcado como cancelado");
+            }
+
+            OrderStatus = OrderStatus.Cancelado;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

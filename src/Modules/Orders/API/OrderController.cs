@@ -14,11 +14,13 @@ namespace NordesteFoodAPI.Modules.Orders.API
     {
         private readonly CreateOrderUseCase _createOrderUseCase;
         private readonly GetOrderByIdUseCase _getOrderByIdUseCase;
+        private readonly UpdateOrderStatusUseCase _updateOrderStatusUseCase;
 
-        public OrderController(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase)
+        public OrderController(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase)
         {
             _createOrderUseCase = createOrderUseCase;
             _getOrderByIdUseCase = getOrderByIdUseCase;
+            _updateOrderStatusUseCase = updateOrderStatusUseCase;
         }
 
         [HttpPost]
@@ -94,6 +96,38 @@ namespace NordesteFoodAPI.Modules.Orders.API
                 Data = result.Value,
                 Message = $"O pedido de Id '{orderId}' foi encontrado com sucesso"
             });
+        }
+
+        [HttpPut]
+        [Authorize]
+        [Route("update/{orderId}/status")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateAsync(Guid orderId, [FromBody] UpdateOrderStatusRequestDTO updateOrderStatusRequestDTO)
+        {
+            var result = await _updateOrderStatusUseCase.UpdateStatusAsync(orderId, updateOrderStatusRequestDTO);
+
+            if (!result.IsSuccess)
+            {
+                var statusCode = result.ErrorType switch
+                {
+                    ErrorType.NotFound => StatusCodes.Status404NotFound,
+                    ErrorType.ValidationError => StatusCodes.Status400BadRequest,
+                    ErrorType.DatabaseError => StatusCodes.Status500InternalServerError,
+                    ErrorType.UnexpectedFailure => StatusCodes.Status500InternalServerError,
+                    _ => StatusCodes.Status500InternalServerError
+                };
+
+                return StatusCode(statusCode, new ApiResponse
+                {
+                    Status = statusCode,
+                    Message = result.ErrorMessage ?? $"Ocorreu um erro inesperado ao atualizar o pedido de Id '{orderId}' para o status {updateOrderStatusRequestDTO.OrderStatus}''"
+                });
+            }
+
+            return NoContent();
         }
     }
 }

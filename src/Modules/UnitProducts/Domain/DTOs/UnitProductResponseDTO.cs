@@ -5,6 +5,7 @@
          Guid ProductId,
          Guid RestaurantId,
          decimal Price,
+         int? StockQuantity,
          string ProductName,
          bool IsAvailable,
          DateTime CreatedAt,

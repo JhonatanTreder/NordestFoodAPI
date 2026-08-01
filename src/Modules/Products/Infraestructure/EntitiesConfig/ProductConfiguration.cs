@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NordesteFoodAPI.Modules.Products.Domain.Entities;
 using NordesteFoodAPI.Modules.Products.Domain.ValueObjects;
 
-namespace NordesteFoodAPI.Modules.Products.Infraestructure.EntityConfig
+namespace NordesteFoodAPI.Modules.Products.Infraestructure.EntitiesConfig
 {
     public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {

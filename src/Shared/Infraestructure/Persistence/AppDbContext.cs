@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using NordesteFoodAPI.Modules.Feedbacks.Domain.Entities;
 using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Modules.Payments.Domain.Entities;
 using NordesteFoodAPI.Modules.Products.Domain.Entities;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
+using NordesteFoodAPI.Modules.Stocks.Domain.Entities;
 using NordesteFoodAPI.Modules.UnitProducts.Domain.Entities;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 
@@ -19,6 +21,8 @@ namespace NordesteFoodAPI.Shared.Infraestructure.Persistence
         public DbSet<UnitProduct> UnitProducts => Set<UnitProduct>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<Stock> Stocks => Set<Stock>();
+        public DbSet<Feedback> Feedbacks => Set<Feedback>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

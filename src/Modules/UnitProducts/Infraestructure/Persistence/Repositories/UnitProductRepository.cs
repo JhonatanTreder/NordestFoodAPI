@@ -20,17 +20,10 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Infraestructure.Persistence.Repos
             await _dbContext.AddAsync(unitProduct);
             await _dbContext.SaveChangesAsync();
 
-            var newUnitProduct = UnitProduct.Create(
-                unitProduct.RestaurantId,
-                unitProduct.ProductId,
-                unitProduct.Price,
-                unitProduct.IsAvailable
-            );
-
             return Result<UnitProduct>.Success(unitProduct);
         }
 
-        public async Task<Result<UnitProduct?>> FindByProductAndRestaurantAsync(Guid productId, Guid restaurantId)
+        public async Task<UnitProduct?> FindByProductAndRestaurantAsync(Guid productId, Guid restaurantId)
         {
             var unitProduct = await _dbContext.UnitProducts
                 .FirstOrDefaultAsync(u =>
@@ -38,7 +31,7 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Infraestructure.Persistence.Repos
                     u.RestaurantId == restaurantId
                 );
 
-            return Result<UnitProduct?>.Success(unitProduct);
+            return unitProduct;
         }
 
         public async Task<Result<IEnumerable<UnitProduct>>> FindByRestaurantIdAsync(Guid restaurantId)

@@ -8,6 +8,7 @@ using NordesteFoodAPI.Modules.Orders.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Payments.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Products.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Restaurants.Infraestructure.DependencyInjection;
+using NordesteFoodAPI.Modules.Stocks.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.UnitProducts.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
@@ -71,13 +72,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
-//Módulos existentes no projeto
+//Adiciona os módulos do projeto
 builder.Services.AddAuthModule();
 builder.Services.AddRestaurantsModule();
 builder.Services.AddProductsModule();
 builder.Services.AddUnitProductModule();
-builder.Services.AddOrderModule();
+builder.Services.AddOrdersModule();
 builder.Services.AddPaymentsModule();
+builder.Services.AddStocksModule();
 
 builder.Services.AddAuthentication(options =>
 {

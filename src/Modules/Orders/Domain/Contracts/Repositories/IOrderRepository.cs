@@ -1,7 +1,7 @@
 ﻿using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Shared.Common.Results;
 
-namespace NordesteFoodAPI.Modules.Orders.Domain.Contracts
+namespace NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories
 {
     public interface IOrderRepository
     {

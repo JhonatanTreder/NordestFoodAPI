@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Entities;
 
-namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.EntityConfig
+namespace NordesteFoodAPI.Modules.Restaurants.Infraestructure.EntitiesConfig
 {
     public class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
     {

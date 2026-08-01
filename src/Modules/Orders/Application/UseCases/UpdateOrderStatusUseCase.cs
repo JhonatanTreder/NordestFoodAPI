@@ -1,4 +1,4 @@
-﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts;
+﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.Order;
 using NordesteFoodAPI.Modules.Orders.Domain.Enums;
 using NordesteFoodAPI.Shared.Common.Results;

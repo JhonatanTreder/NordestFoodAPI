@@ -10,6 +10,7 @@
         Unauthorized,
         UnexpectedFailure,
         Failure,
-        DatabaseError
+        DatabaseError,
+        BussinessError
     }
 }

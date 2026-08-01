@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NordesteFoodAPI.Modules.Orders.Domain.Contracts;
+using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
 using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Shared.Common.Results;
 using NordesteFoodAPI.Shared.Infraestructure.Persistence;
@@ -27,7 +27,7 @@ namespace NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.Repositorie
             catch (DbUpdateException ex)
             {
                 return Result<Order>.Failure(
-                    $"Erro ao criar o pedido: {ex.Message}",
+                    $"Ocorreu um erro inesperado ao tentar criar o pedido: {ex.Message}",
                     ErrorType.DatabaseError
                 );
             }
@@ -54,7 +54,7 @@ namespace NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.Repositorie
             catch (Exception ex)
             {
                 return Result<Order>.Failure(
-                    $"Erro ao criar o pedido: {ex.Message}",
+                    $"Ocorreu um erro inesperado ao tentar buscar pelo pedido: {ex.Message}",
                     ErrorType.DatabaseError
                 );
             }

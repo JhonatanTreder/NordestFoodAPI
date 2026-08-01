@@ -65,6 +65,7 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Application.UseCases
                 up.ProductId,
                 up.RestaurantId,
                 up.Price.Value,
+                null,
                 productsById[up.ProductId].ProductName.Value,
                 up.IsAvailable,
                 up.CreatedAt,

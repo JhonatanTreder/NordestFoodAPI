@@ -6,9 +6,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		
 		<!-- Versionamento do Projeto -->
-		<Version>1.9.0</Version>
-		<AssemblyVersion>1.9.0.0</AssemblyVersion>
-		<FileVersion>1.9.0.0</FileVersion>
+		<Version>1.10.0</Version>
+		<AssemblyVersion>1.10.0.0</AssemblyVersion>
+		<FileVersion>1.10.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,8 +28,7 @@
 
 	<ItemGroup>
 		<Folder Include="Modules\Auth\Domain\Entities\" />
-		<Folder Include="Modules\Auth\Infraestructure\Persistence\Repositories\" />
-		<Folder Include="Modules\Auth\Infraestructure\Security\" />
+		<Folder Include="Modules\Feedbacks\Domain\Contracts\" />
 		<Folder Include="Shared\Application\" />
 	</ItemGroup>
 

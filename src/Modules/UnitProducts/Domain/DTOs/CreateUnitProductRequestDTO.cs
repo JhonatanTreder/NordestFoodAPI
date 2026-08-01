@@ -4,6 +4,6 @@
        Guid ProductId,
        Guid RestaurantId,
        decimal Price,
-       bool IsAvailable
+       int InitalQuantity
    );
 }

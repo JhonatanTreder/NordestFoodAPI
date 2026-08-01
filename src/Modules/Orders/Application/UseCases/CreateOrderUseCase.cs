@@ -1,9 +1,10 @@
-﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts;
+﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.Order;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.OrderItem;
 using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Modules.Orders.Domain.Enums;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Contracts;
+using NordesteFoodAPI.Modules.Stocks.Domain.Contracts;
 using NordesteFoodAPI.Modules.UnitProducts.Domain.Contracts;
 using NordesteFoodAPI.Modules.UnitProducts.Domain.Entities;
 using NordesteFoodAPI.Shared.Common.Results;
@@ -12,18 +13,21 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
 {
     public class CreateOrderUseCase
     {
-        private readonly  IOrderRepository _orderRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IUnitProductRepository _unitProductRepository;
+        private readonly IStockRepository _stockRepository;
 
         public CreateOrderUseCase(
             IOrderRepository orderRepository,
             IRestaurantRepository restaurantRepository,
-            IUnitProductRepository unitProductRepository)
+            IUnitProductRepository unitProductRepository,
+            IStockRepository stockRepository)
         {
             _orderRepository = orderRepository;
             _restaurantRepository = restaurantRepository;
             _unitProductRepository = unitProductRepository;
+            _stockRepository = stockRepository;
         }
 
         public async Task<Result<OrderResponseDTO>> CreateAsync(CreateOrderRequestDTO orderRequestDTO, Guid userId)
@@ -95,6 +99,16 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
                     return Result<OrderResponseDTO>.Failure(
                         $"O produto de Id '{item.ProductId}' solicitado pelo cliente não está disponível",
                         ErrorType.Conflict
+                    );
+                }
+
+                var stock = await _stockRepository.FindByProductAndRestaurantAsync(item.ProductId, order.RestaurantId);
+
+                if (stock is null || stock.Quantity.Value < item.Quantity)
+                {
+                    return Result<OrderResponseDTO>.Failure(
+                        $"Estoque insuficiente para o produto de Id '{item.ProductId}'.",
+                        ErrorType.ValidationError
                     );
                 }
 

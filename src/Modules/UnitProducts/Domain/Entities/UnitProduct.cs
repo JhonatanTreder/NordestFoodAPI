@@ -14,7 +14,7 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Domain.Entities
 
         private UnitProduct() { }
 
-        public static UnitProduct Create(Guid restaurantId, Guid productId, UnitPrice price, bool isAvailable)
+        public static UnitProduct Create(Guid restaurantId, Guid productId, UnitPrice price)
         {
             return new UnitProduct
             {
@@ -22,7 +22,7 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Domain.Entities
                 RestaurantId = restaurantId,
                 ProductId = productId,
                 Price = price,
-                IsAvailable = isAvailable,
+                IsAvailable = false,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };

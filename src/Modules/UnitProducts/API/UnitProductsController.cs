@@ -35,6 +35,7 @@ namespace NordesteFoodAPI.Modules.UnitProducts.API
                 var statusCode = result.ErrorType switch
                 {
                     ErrorType.NotFound => StatusCodes.Status404NotFound,
+                    ErrorType.Conflict => StatusCodes.Status409Conflict,
                     _ => StatusCodes.Status500InternalServerError
                 };
 

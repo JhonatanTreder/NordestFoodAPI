@@ -1,10 +1,12 @@
-﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts;
+﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
+using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Modules.Orders.Domain.Enums;
 using NordesteFoodAPI.Modules.Payments.Domain.Contracts.Repositories;
 using NordesteFoodAPI.Modules.Payments.Domain.Contracts.Services;
 using NordesteFoodAPI.Modules.Payments.Domain.DTOs;
 using NordesteFoodAPI.Modules.Payments.Domain.Entities;
 using NordesteFoodAPI.Modules.Payments.Domain.Enums;
+using NordesteFoodAPI.Modules.Stocks.Domain.Contracts;
 using NordesteFoodAPI.Shared.Common.Results;
 
 namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
@@ -14,12 +16,18 @@ namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
         private readonly IPaymentService _paymentService;
         private readonly IOrderRepository _orderRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IStockRepository _stockRepository;
 
-        public CreatePaymentUseCase(IPaymentRepository paymentRepository, IPaymentService paymentService, IOrderRepository orderRepository)
+        public CreatePaymentUseCase(
+            IPaymentRepository paymentRepository,
+            IPaymentService paymentService,
+            IOrderRepository orderRepository,
+            IStockRepository stockRepository)
         {
             _paymentRepository = paymentRepository;
             _paymentService = paymentService;
             _orderRepository = orderRepository;
+            _stockRepository = stockRepository;
         }
 
         public async Task<Result<PaymentResponseDTO>> CreateAsync(CreatePaymentRequestDTO createPaymentRequestDTO)
@@ -105,9 +113,39 @@ namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
                 order.ConfirmPayment();
 
                 await _orderRepository.UpdateAsync(order);
+
+                foreach (OrderItem orderItem in order.Items)
+                {
+                    var stock = await _stockRepository.FindByProductAndRestaurantAsync(
+                        orderItem.ProductId,
+                        order.RestaurantId
+                    );
+
+                    if (stock is null)
+                    {
+                        return Result<PaymentResponseDTO>.Failure(
+                            $"O estoque não foi configurado para o produto de Id '{orderItem.ProductId}' no restaurante de Id '{order.RestaurantId}'.",
+                            ErrorType.NotFound
+                        );
+                    }
+
+                    var decreaseResult = await _stockRepository.DecreaseStockAsync(
+                        stock.Id,
+                        orderItem.Quantity.Value
+                    );
+
+                    if (!decreaseResult.IsSuccess)
+                    {
+                        return Result<PaymentResponseDTO>.Failure(
+                            decreaseResult.ErrorMessage ?? $"Erro ao decrementar estoque do produto de Id '{orderItem.ProductId}'.",
+                            decreaseResult.ErrorType
+                        );
+                    }
+                }
             }
 
             var createPaymentResponse = await _paymentRepository.CreateAsync(payment);
+
             if (!createPaymentResponse.IsSuccess)
             {
                 return Result<PaymentResponseDTO>.Failure(

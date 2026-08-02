@@ -16,18 +16,15 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
 
         public async Task<Result<OrderResponseDTO>> GetAsync(Guid orderId)
         {
-            var repositoryResponse = await _orderRepository.FindByIdAsync(orderId);
+            var order = await _orderRepository.FindByIdAsync(orderId);
 
-            if (!repositoryResponse.IsSuccess)
+            if (order is null)
             {
                 return Result<OrderResponseDTO>.Failure(
-                    repositoryResponse.ErrorMessage ??
-                    $"Ocorreu um erro inespperado ao tentar buscar pelo pedido de Id '{orderId}'",
-                    repositoryResponse.ErrorType
+                    $"O pedido de Id '{orderId}' não foi encontrado",
+                    ErrorType.NotFound
                 );
             }
-
-            var order = repositoryResponse.Value!;
 
             var orderResponseDTO = new OrderResponseDTO(
                 UserId: order.UserId,

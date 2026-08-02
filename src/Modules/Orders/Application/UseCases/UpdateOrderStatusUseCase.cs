@@ -17,17 +17,15 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
 
         public async Task<Result> UpdateStatusAsync(Guid orderId, UpdateOrderStatusRequestDTO updateOrderStatusDTO)
         {
-            var repositoryResult = await _orderRepository.FindByIdAsync(orderId);
+            var order = await _orderRepository.FindByIdAsync(orderId);
 
-            if (!repositoryResult.IsSuccess)
+            if (order is null)
             {
                 return Result.Failure(
-                    repositoryResult.ErrorMessage ?? $"Ocorreu um erro inesperado ao tentar buscar pelo pedido de Id '{orderId}'",
-                    repositoryResult.ErrorType
+                    $"O pedido de Id '{orderId}' não foi encontrado",
+                    ErrorType.NotFound
                 );
             }
-
-            var order = repositoryResult.Value!;
 
             var isSuccessOrderStatusConversion = Enum.TryParse<OrderStatus>(updateOrderStatusDTO.OrderStatus, true, out var orderStatus);
 

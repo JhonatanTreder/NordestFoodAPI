@@ -27,5 +27,11 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Domain.Entities
                 UpdatedAt = DateTime.UtcNow
             };
         }
+
+        public void Active()
+        {
+            IsAvailable = true;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

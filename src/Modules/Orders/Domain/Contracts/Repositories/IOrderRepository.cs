@@ -6,7 +6,7 @@ namespace NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories
     public interface IOrderRepository
     {
         Task<Result<Order>> CreateAsync(Order order);
-        Task<Result<Order>> FindByIdAsync(Guid orderId);
+        Task<Order?> FindByIdAsync(Guid orderId);
         Task<Result<Order>> UpdateAsync(Order order);
     }
 }

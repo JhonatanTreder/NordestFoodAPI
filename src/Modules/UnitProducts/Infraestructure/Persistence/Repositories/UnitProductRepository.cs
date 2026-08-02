@@ -42,5 +42,34 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Infraestructure.Persistence.Repos
 
             return Result<IEnumerable<UnitProduct>>.Success(products);
         }
+
+        public async Task<Result> ActiveUnitProductByIdAsync(Guid unitProductId)
+        {
+            var unitProduct = await _dbContext.UnitProducts.FirstOrDefaultAsync( u => u.Id == unitProductId);
+
+            if (unitProduct is null)
+            {
+                return Result.Failure(
+                    $"O produto de Id '{unitProductId}' de um restaurante não foi encontrado",
+                    ErrorType.NotFound
+                );
+            }
+
+            unitProduct.Active();
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+
+                return Result.Success();
+            }
+            catch (DbUpdateException ex)
+            {
+                return Result.Failure(
+                    $"Ocorreu um erro ao tentar ativar o produto de Id '{unitProductId}' de um restaurante: {ex.Message}",
+                    ErrorType.DatabaseError
+                );
+            }
+        }
     }
 }

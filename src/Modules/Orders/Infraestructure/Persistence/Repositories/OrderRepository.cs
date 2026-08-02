@@ -33,31 +33,13 @@ namespace NordesteFoodAPI.Modules.Orders.Infraestructure.Persistence.Repositorie
             }
         }
 
-        public async Task<Result<Order>> FindByIdAsync(Guid orderId)
+        public async Task<Order?> FindByIdAsync(Guid orderId)
         {
-            try
-            {
-                var order = await _dbContext.Orders
-                    .Include(o => o.Items)
-                    .FirstOrDefaultAsync(o => o.Id == orderId);
+            var order = await _dbContext.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
 
-                if (order is null)
-                {
-                    return Result<Order>.Failure(
-                        $"O pedido com Id '{orderId}' não foi encontrado",
-                        ErrorType.NotFound
-                    );
-                }
-
-                return Result<Order>.Success(order);
-            }
-            catch (Exception ex)
-            {
-                return Result<Order>.Failure(
-                    $"Ocorreu um erro inesperado ao tentar buscar pelo pedido: {ex.Message}",
-                    ErrorType.DatabaseError
-                );
-            }
+            return order;
         }
 
         public async Task<Result<Order>> UpdateAsync(Order order)

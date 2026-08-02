@@ -8,5 +8,6 @@ namespace NordesteFoodAPI.Modules.UnitProducts.Domain.Contracts
         Task<Result<UnitProduct>> CreateAsync(UnitProduct unitProduct);
         Task<UnitProduct?> FindByProductAndRestaurantAsync(Guid productId, Guid restaurantId);
         Task<Result<IEnumerable<UnitProduct>>> FindByRestaurantIdAsync(Guid restaurantId);
+        Task<Result> ActiveUnitProductByIdAsync(Guid unitProductId);
     }
 }

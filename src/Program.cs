@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NordesteFoodAPI.Modules.Auth.Infraestructure.DependencyInjection;
+using NordesteFoodAPI.Modules.Feedbacks.Infreaestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Orders.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Payments.Infraestructure.DependencyInjection;
 using NordesteFoodAPI.Modules.Products.Infraestructure.DependencyInjection;
@@ -80,6 +81,7 @@ builder.Services.AddUnitProductModule();
 builder.Services.AddOrdersModule();
 builder.Services.AddPaymentsModule();
 builder.Services.AddStocksModule();
+builder.Services.AddFeedbacksModule();
 
 builder.Services.AddAuthentication(options =>
 {

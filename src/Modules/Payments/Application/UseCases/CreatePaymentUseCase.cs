@@ -52,17 +52,15 @@ namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
                 );
             }
 
-            var orderResponse = await _orderRepository.FindByIdAsync(createPaymentRequestDTO.OrderId);
+            var order = await _orderRepository.FindByIdAsync(createPaymentRequestDTO.OrderId);
 
-            if (!orderResponse.IsSuccess)
+            if (order is null)
             {
                 return Result<PaymentResponseDTO>.Failure(
-                    orderResponse.ErrorMessage ?? $"Ocorreu um erro inesperado ao tentar buscar pelo pedido de Id '{createPaymentRequestDTO.OrderId}'",
-                    orderResponse.ErrorType
+                    $"O pedido de Id '{createPaymentRequestDTO.OrderId}' não foi encontrado",
+                    ErrorType.NotFound
                 );
             }
-
-            var order = orderResponse.Value!;
 
             if (order.OrderStatus != OrderStatus.AguardandoPagamento)
             {

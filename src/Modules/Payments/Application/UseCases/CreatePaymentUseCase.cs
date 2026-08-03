@@ -30,7 +30,7 @@ namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
             _stockRepository = stockRepository;
         }
 
-        public async Task<Result<PaymentResponseDTO>> CreateAsync(CreatePaymentRequestDTO createPaymentRequestDTO)
+        public async Task<Result<PaymentResponseDTO>> CreateAsync(CreatePaymentRequestDTO createPaymentRequestDTO, Guid userId)
         {
             var isSuccessProviderConversion = Enum.TryParse<PaymentProvider>(createPaymentRequestDTO.PaymentProvider, true, out var paymentProvider);
 
@@ -58,6 +58,14 @@ namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
             {
                 return Result<PaymentResponseDTO>.Failure(
                     $"O pedido de Id '{createPaymentRequestDTO.OrderId}' não foi encontrado",
+                    ErrorType.NotFound
+                );
+            }
+
+            if (order.UserId != userId)
+            {
+                return Result<PaymentResponseDTO>.Failure(
+                    $"O pedido de Id '{createPaymentRequestDTO.OrderId}' não foi encontrado.",
                     ErrorType.NotFound
                 );
             }

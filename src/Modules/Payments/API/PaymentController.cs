@@ -4,6 +4,7 @@ using NordesteFoodAPI.Modules.Payments.Application.UseCases;
 using NordesteFoodAPI.Modules.Payments.Domain.DTOs;
 using NordesteFoodAPI.Shared.API.Responses;
 using NordesteFoodAPI.Shared.Common.Results;
+using System.Security.Claims;
 
 namespace NordesteFoodAPI.Modules.Payments.API
 {
@@ -19,8 +20,8 @@ namespace NordesteFoodAPI.Modules.Payments.API
         }
 
         [HttpPost]
-        [Authorize]
         [Route("create")]
+        [Authorize(Policy = "ClientOnly")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -28,7 +29,8 @@ namespace NordesteFoodAPI.Modules.Payments.API
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] CreatePaymentRequestDTO createPaymentRequestDTO)
         {
-            var result = await _createPaymentUseCase.CreateAsync(createPaymentRequestDTO);
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var result = await _createPaymentUseCase.CreateAsync(createPaymentRequestDTO, userId);
 
             if (!result.IsSuccess)
             {

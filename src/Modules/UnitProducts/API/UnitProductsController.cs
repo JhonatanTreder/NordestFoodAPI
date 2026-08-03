@@ -27,8 +27,8 @@ namespace NordesteFoodAPI.Modules.UnitProducts.API
         }
 
         [HttpPost]
-        [Authorize]
         [Route("create")]
+        [Authorize(Policy = "AdminOnly")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -61,8 +61,8 @@ namespace NordesteFoodAPI.Modules.UnitProducts.API
         }
 
         [HttpPatch]
-        [Authorize]
         [Route("{unitProductId}/active")]
+        [Authorize(Policy = "AdminOnly")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -90,8 +90,8 @@ namespace NordesteFoodAPI.Modules.UnitProducts.API
         }
 
         [HttpGet]
-        [Authorize]
         [Route("restaurant/{restaurantId}/menu")]
+        [Authorize(Policy = "ClientOnly")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

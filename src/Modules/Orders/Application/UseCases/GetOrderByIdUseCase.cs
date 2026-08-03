@@ -14,7 +14,7 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
             _orderRepository = orderRepository;
         }
 
-        public async Task<Result<OrderResponseDTO>> GetAsync(Guid orderId)
+        public async Task<Result<OrderResponseDTO>> GetByIdAsync(Guid orderId, Guid userId)
         {
             var order = await _orderRepository.FindByIdAsync(orderId);
 
@@ -23,6 +23,15 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
                 return Result<OrderResponseDTO>.Failure(
                     $"O pedido de Id '{orderId}' não foi encontrado",
                     ErrorType.NotFound
+                );
+            }
+
+            //Eu estou entregando o mesmo tipo de mensagem para não vazar informações sobre a existência do pedido para o usuário que não é dono desse pedido em si.
+            if (order.UserId != userId)
+            {
+                return Result<OrderResponseDTO>.Failure(
+                   $"O pedido de Id '{orderId}' não foi encontrado",
+                   ErrorType.NotFound
                 );
             }
 

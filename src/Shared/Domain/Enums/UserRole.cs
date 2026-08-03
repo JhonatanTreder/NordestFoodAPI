@@ -5,6 +5,6 @@
         Client = 0,
         Attendant = 1,
         Kitchen = 2,
-        Manager = 3,
+        Admin = 3,
     }
 }

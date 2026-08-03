@@ -9,7 +9,7 @@ namespace NordesteFoodAPI.Shared.Infraestructure.Identity
         {
             foreach (UserRole role in Enum.GetValues<UserRole>())
             {
-                string roleName = role.ToString().ToUpper();
+                string roleName = role.ToString();
 
                 bool roleExists = await roleManager.RoleExistsAsync(roleName);
 

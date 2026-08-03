@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NordesteFoodAPI.Modules.Products.Application.UseCases;
 using NordesteFoodAPI.Modules.Products.Domain.DTOs;
 using NordesteFoodAPI.Shared.API.Responses;
@@ -21,6 +22,7 @@ namespace NordesteFoodAPI.Modules.Products.API
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Policy = "AdminOnly")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -52,7 +54,11 @@ namespace NordesteFoodAPI.Modules.Products.API
         }
 
         [HttpGet]
-        [Route("search/id{id}")]
+        [Route("search/id/{id}")]
+        [Authorize(Policy = "AuthenticatedUsers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var result = await _getProductByIdUseCase.FindByIdAsync(id);

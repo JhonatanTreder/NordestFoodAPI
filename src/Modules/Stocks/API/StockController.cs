@@ -22,8 +22,8 @@ namespace NordesteFoodAPI.Modules.Stocks.API
         }
 
         [HttpPatch]
-        [Authorize]
         [Route("{stockId}/increase")]
+        [Authorize(Policy = "AdminOnly")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -53,8 +53,8 @@ namespace NordesteFoodAPI.Modules.Stocks.API
         }
 
         [HttpPatch]
-        [Authorize]
         [Route("{stockId}/decrease")]
+        [Authorize(Policy = "AdminOnly")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

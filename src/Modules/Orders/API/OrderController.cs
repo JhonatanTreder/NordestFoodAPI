@@ -14,18 +14,30 @@ namespace NordesteFoodAPI.Modules.Orders.API
     {
         private readonly CreateOrderUseCase _createOrderUseCase;
         private readonly GetOrderByIdUseCase _getOrderByIdUseCase;
-        private readonly UpdateOrderStatusUseCase _updateOrderStatusUseCase;
+        private readonly StartOrderPreparationUseCase _startOrderPreparationUseCase;
+        private readonly MarkAsReadyUseCase _markAsReadyUseCase;
+        private readonly MarkAsDeliveredUseCase _markAsDeliveredUseCase;
+        private readonly MarkAsCanceledUseCase _markAsCanceledUseCase;
 
-        public OrderController(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase)
+        public OrderController(
+            CreateOrderUseCase createOrderUseCase,
+            GetOrderByIdUseCase getOrderByIdUseCase,
+            StartOrderPreparationUseCase startOrderPreparationUseCase,
+            MarkAsReadyUseCase markAsReadyUseCase,
+            MarkAsDeliveredUseCase markAsDeliveredUseCase,
+            MarkAsCanceledUseCase markAsCanceledUseCase)
         {
             _createOrderUseCase = createOrderUseCase;
             _getOrderByIdUseCase = getOrderByIdUseCase;
-            _updateOrderStatusUseCase = updateOrderStatusUseCase;
+            _startOrderPreparationUseCase = startOrderPreparationUseCase;
+            _markAsReadyUseCase = markAsReadyUseCase;
+            _markAsDeliveredUseCase = markAsDeliveredUseCase;
+            _markAsCanceledUseCase = markAsCanceledUseCase;
         }
 
         [HttpPost]
-        [Authorize]
         [Route("create")]
+        [Authorize(Policy = "ClientOnly")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -34,7 +46,6 @@ namespace NordesteFoodAPI.Modules.Orders.API
         public async Task<IActionResult> CreateAsync([FromBody] CreateOrderRequestDTO createOrderDTO)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
             var result = await _createOrderUseCase.CreateAsync(createOrderDTO, userId);
 
             if (!result.IsSuccess)
@@ -65,14 +76,15 @@ namespace NordesteFoodAPI.Modules.Orders.API
         }
 
         [HttpGet]
-        [Authorize]
         [Route("search/id/{orderId}")]
+        [Authorize(Policy = "AuthenticatedUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> FindByIdAsync(Guid orderId)
         {
-            var result = await _getOrderByIdUseCase.GetAsync(orderId);
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var result = await _getOrderByIdUseCase.GetByIdAsync(orderId, userId);
 
             if (!result.IsSuccess)
             {
@@ -98,32 +110,124 @@ namespace NordesteFoodAPI.Modules.Orders.API
             });
         }
 
-        [HttpPut]
-        [Authorize]
-        [Route("update/{orderId}/status")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPatch]
+        [Route("start-preparation/{orderId}")]
+        [Authorize(Policy = "KitchenOnly")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAsync(Guid orderId, [FromBody] UpdateOrderStatusRequestDTO updateOrderStatusRequestDTO)
+        public async Task<IActionResult> StartPreparationAsync(Guid orderId)
         {
-            var result = await _updateOrderStatusUseCase.UpdateStatusAsync(orderId, updateOrderStatusRequestDTO);
+            var result = await _startOrderPreparationUseCase.StartPreparationAsync(orderId);
 
             if (!result.IsSuccess)
             {
                 var statusCode = result.ErrorType switch
                 {
                     ErrorType.NotFound => StatusCodes.Status404NotFound,
-                    ErrorType.ValidationError => StatusCodes.Status400BadRequest,
+                    ErrorType.Conflict => StatusCodes.Status409Conflict,
                     ErrorType.DatabaseError => StatusCodes.Status500InternalServerError,
-                    ErrorType.UnexpectedFailure => StatusCodes.Status500InternalServerError,
                     _ => StatusCodes.Status500InternalServerError
                 };
 
                 return StatusCode(statusCode, new ApiResponse
                 {
                     Status = statusCode,
-                    Message = result.ErrorMessage ?? $"Ocorreu um erro inesperado ao atualizar o pedido de Id '{orderId}' para o status {updateOrderStatusRequestDTO.OrderStatus}''"
+                    Message = result.ErrorMessage ?? $"Ocorreu um erro inesperado ao iniciar a preparação do pedido de Id '{orderId}'"
+                });
+            }
+
+            return NoContent();
+        }
+
+        [HttpPatch]
+        [Route("mark-ready/{orderId}")]
+        [Authorize(Policy = "KitchenOnly")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> MarkAsReadyAsync(Guid orderId)
+        {
+            var result = await _markAsReadyUseCase.MarkAsReadyAsync(orderId);
+
+            if (!result.IsSuccess)
+            {
+                var statusCode = result.ErrorType switch
+                {
+                    ErrorType.NotFound => StatusCodes.Status404NotFound,
+                    ErrorType.Conflict => StatusCodes.Status409Conflict,
+                    ErrorType.DatabaseError => StatusCodes.Status500InternalServerError,
+                    _ => StatusCodes.Status500InternalServerError
+                };
+
+                return StatusCode(statusCode, new ApiResponse
+                {
+                    Status = statusCode,
+                    Message = result.ErrorMessage ?? $"Ocorreu um erro inesperado ao marcar o pedido de Id '{orderId}' como preparado"
+                });
+            }
+
+            return NoContent();
+        }
+
+        [HttpPatch]
+        [Route("deliver/{orderId}")]
+        [Authorize(Policy = "AttendantOrAdmin")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> MarkAsDeliveredAsync(Guid orderId)
+        {
+            var result = await _markAsDeliveredUseCase.MarkAsDeliveredAsync(orderId);
+
+            if (!result.IsSuccess)
+            {
+                var statusCode = result.ErrorType switch
+                {
+                    ErrorType.NotFound => StatusCodes.Status404NotFound,
+                    ErrorType.Conflict => StatusCodes.Status409Conflict,
+                    ErrorType.DatabaseError => StatusCodes.Status500InternalServerError,
+                    _ => StatusCodes.Status500InternalServerError
+                };
+
+                return StatusCode(statusCode, new ApiResponse
+                {
+                    Status = statusCode,
+                    Message = result.ErrorMessage ?? $"Ocorreu um erro inesperado ao tentar entregar o pedido de Id '{orderId}'"
+                });
+            }
+
+            return NoContent();
+        }
+
+        [HttpPatch]
+        [Route("cancel/{orderId}")]
+        [Authorize(Policy = "AttendantOrAdmin")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> MarkAsCanceledAsync(Guid orderId)
+        {
+            var result = await _markAsCanceledUseCase.MarkAsCanceledAsync(orderId);
+
+            if (!result.IsSuccess)
+            {
+                var statusCode = result.ErrorType switch
+                {
+                    ErrorType.NotFound => StatusCodes.Status404NotFound,
+                    ErrorType.Conflict => StatusCodes.Status409Conflict,
+                    ErrorType.DatabaseError => StatusCodes.Status500InternalServerError,
+                    _ => StatusCodes.Status500InternalServerError
+                };
+
+                return StatusCode(statusCode, new ApiResponse
+                {
+                    Status = statusCode,
+                    Message = result.ErrorMessage ?? $"Ocorreu um erro inesperado ao tentar cancelar o pedido de Id '{orderId}'"
                 });
             }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NordesteFoodAPI.Modules.Auth.Application.UseCases;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Login;
@@ -22,7 +23,8 @@ namespace NordesteFoodAPI.Modules.Auth.API
             _registerUseCase = registerUseCase;
         }
 
-        [HttpPost("login")]
+        [HttpPost]
+        [Authorize(Policy = "AuthenticatedUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -34,7 +36,8 @@ namespace NordesteFoodAPI.Modules.Auth.API
             return Ok(loginResponse);
         }
 
-        [HttpPost("register")]
+        [HttpPost]
+        [Route("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

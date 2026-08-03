@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NordesteFoodAPI.Modules.Restaurants.Application.UseCases;
 using NordesteFoodAPI.Modules.Restaurants.Domain.DTOs;
 using NordesteFoodAPI.Shared.API.Responses;
@@ -30,6 +31,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
 
         [HttpPost]
         [Route("create")]
+        [Authorize(Policy = "AdminOnly")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -63,6 +65,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
 
         [HttpGet]
         [Route("search/comercial-name/{comercialName}")]
+        [Authorize(Policy = "AuthenticatedUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -95,6 +98,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
 
         [HttpGet]
         [Route("search/id/{id}")]
+        [Authorize(Policy = "AuthenticatedUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -127,6 +131,7 @@ namespace NordesteFoodAPI.Modules.Restaurants.API
 
         [HttpGet]
         [Route("search/all")]
+        [Authorize(Policy = "AuthenticatedUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

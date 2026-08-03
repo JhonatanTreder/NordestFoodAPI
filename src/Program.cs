@@ -102,7 +102,23 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AuthenticatedUsers", policy => 
+        policy.RequireAuthenticatedUser());
+
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+
+    options.AddPolicy("ClientOnly", policy =>
+       policy.RequireRole("Client"));
+
+    options.AddPolicy("KitchenOnly", policy =>
+       policy.RequireRole("Kitchen"));
+
+    options.AddPolicy("AttendantOrAdmin", policy =>
+     policy.RequireRole("Attendant", "Admin"));
+});
 
 var app = builder.Build();
 

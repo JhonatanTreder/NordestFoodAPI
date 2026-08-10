@@ -229,9 +229,10 @@ dotnet ef database update
 # 3. Executar a aplicação
 dotnet run
 ```
->**OBS: Será necessário rodar o projeto localmente na porta 7200, caso contrário o projeto vai ter problemas para ser inicializado (principalmente na inicialização do Swagger/OpenAPI)** 
+>**OBS: Será necessário rodar o projeto localmente na porta 7200, caso contrário o projeto vai ter problemas para ser inicializado (principalmente na inicialização do Swagger/OpenAPI)
+>Para rodar em http simples, você deve utilizar a porta 5000** 
 
-A API ficará disponível em `https://localhost:7200` (conforme `launchSettings.json`).
+A API ficará disponível em `https://localhost:7200` ou em `http://localhost:5000` para rodar em `http` conforme o arquivo `launchSettings.json`.
 
 Ao iniciar, o `RoleSeeder` garante a criação das roles (`Client`, `Attendant`, `Kitchen`, `Admin`) caso ainda não existam no banco.
 

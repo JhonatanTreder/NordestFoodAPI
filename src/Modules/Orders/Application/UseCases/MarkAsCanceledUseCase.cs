@@ -8,10 +8,12 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
     public class MarkAsCanceledUseCase
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly ILogger<MarkAsCanceledUseCase> _logger;
 
-        public MarkAsCanceledUseCase(IOrderRepository orderRepository)
+        public MarkAsCanceledUseCase(IOrderRepository orderRepository, ILogger<MarkAsCanceledUseCase> logger)
         {
             _orderRepository = orderRepository;
+            _logger = logger;
         }
 
         public async Task<Result> MarkAsCanceledAsync(Guid orderId)
@@ -47,6 +49,8 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
                     updateOrderResult.ErrorType
                 );
             }
+
+            _logger.LogInformation("O pedido de Id '{OrderId}' foi cancelado com sucesso.", orderId);
 
             return Result.Success();
         }

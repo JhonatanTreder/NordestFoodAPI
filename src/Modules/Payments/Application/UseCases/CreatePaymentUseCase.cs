@@ -1,4 +1,5 @@
-﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
+﻿using Microsoft.Extensions.Logging;
+using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
 using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Modules.Orders.Domain.Enums;
 using NordesteFoodAPI.Modules.Payments.Domain.Contracts.Repositories;
@@ -17,17 +18,20 @@ namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
         private readonly IOrderRepository _orderRepository;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IStockRepository _stockRepository;
+        private readonly ILogger<CreatePaymentUseCase> _logger;
 
         public CreatePaymentUseCase(
             IPaymentRepository paymentRepository,
             IPaymentService paymentService,
             IOrderRepository orderRepository,
-            IStockRepository stockRepository)
+            IStockRepository stockRepository,
+            ILogger<CreatePaymentUseCase> logger)
         {
             _paymentRepository = paymentRepository;
             _paymentService = paymentService;
             _orderRepository = orderRepository;
             _stockRepository = stockRepository;
+            _logger = logger;
         }
 
         public async Task<Result<PaymentResponseDTO>> CreateAsync(CreatePaymentRequestDTO createPaymentRequestDTO, Guid userId)
@@ -159,6 +163,8 @@ namespace NordesteFoodAPI.Modules.Payments.Application.UseCases
                     createPaymentResponse.ErrorType
                 );
             }
+
+            _logger.LogInformation("O pagamento foi criado com sucesso para o pedido de Id '{OrderId}' com o status {PaymentStatus}", order.Id, payment.PaymentStatus);
 
             return Result<PaymentResponseDTO>.Success(new PaymentResponseDTO(
                 PaymentId: payment.Id,

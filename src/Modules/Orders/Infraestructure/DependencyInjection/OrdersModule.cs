@@ -11,6 +11,7 @@ namespace NordesteFoodAPI.Modules.Orders.Infraestructure.DependencyInjection
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<CreateOrderUseCase>();
             services.AddScoped<GetOrderByIdUseCase>();
+            services.AddScoped<GetOrdersByFilterUseCase>();
             services.AddScoped<StartOrderPreparationUseCase>();
             services.AddScoped<MarkAsReadyUseCase>();
             services.AddScoped<MarkAsCanceledUseCase>();

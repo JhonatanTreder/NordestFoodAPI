@@ -9,10 +9,12 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
     public class StartOrderPreparationUseCase
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly ILogger<StartOrderPreparationUseCase> _logger;
 
-        public StartOrderPreparationUseCase(IOrderRepository orderRepository)
+        public StartOrderPreparationUseCase(IOrderRepository orderRepository, ILogger<StartOrderPreparationUseCase> logger)
         {
             _orderRepository = orderRepository;
+            _logger = logger;
         }
 
         public async Task<Result> StartPreparationAsync(Guid orderId)
@@ -48,6 +50,8 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
                     updateOrderResult.ErrorType
                 );
             }
+
+            _logger.LogInformation("A preparação do pedido de Id '{OrderId}' foi iniciada com sucesso.", orderId);
 
             return Result.Success();
         }

@@ -2,6 +2,7 @@
 using NordesteFoodAPI.Modules.Auth.Application.Exceptions;
 using NordesteFoodAPI.Modules.Auth.Domain.Contracts;
 using NordesteFoodAPI.Modules.Auth.Domain.DTOs.Login;
+using NordesteFoodAPI.Shared.Common.Results;
 using NordesteFoodAPI.Shared.Infraestructure.Identity;
 
 namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
@@ -17,19 +18,26 @@ namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
             _tokenService = tokenService;
         }
 
-        public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
+        public async Task<Result<LoginResponseDTO>> Login(LoginRequestDTO loginRequestDTO)
         {
             var user = await _userManager.FindByEmailAsync(loginRequestDTO.Email);
 
             if (user is null || !await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password))
-                throw new ApplicationLayerException("Email ou senha inválidos.");
+            {
+                return Result<LoginResponseDTO>.Failure(
+                    "Não foi possível fazer o login: Email ou senha inválidos.",
+                    ErrorType.Unauthorized
+                );
+            }
 
             var roles = await _userManager.GetRolesAsync(user);
             var role = roles.FirstOrDefault() ?? "Client";
 
             var token = _tokenService.GenerateAccessToken(user.Id, user.UserName!, role);
 
-            return new LoginResponseDTO(token, user.Id, user.UserName!, role);
+            var loginResponseDTO = new LoginResponseDTO(token, user.Id, user.UserName!, role);
+
+            return Result<LoginResponseDTO>.Success(loginResponseDTO);
         }
     }
 }

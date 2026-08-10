@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NordesteFoodAPI.Modules.Orders.Application.UseCases;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.Order;
+using NordesteFoodAPI.Modules.Orders.Domain.Entities;
 using NordesteFoodAPI.Shared.API.Responses;
 using NordesteFoodAPI.Shared.Common.Results;
 using System.Security.Claims;
@@ -14,10 +15,11 @@ namespace NordesteFoodAPI.Modules.Orders.API
     {
         private readonly CreateOrderUseCase _createOrderUseCase;
         private readonly GetOrderByIdUseCase _getOrderByIdUseCase;
-        private readonly StartOrderPreparationUseCase _startOrderPreparationUseCase;
+        private readonly GetOrdersByFilterUseCase _getOrdersByFilterUseCase;
         private readonly MarkAsReadyUseCase _markAsReadyUseCase;
-        private readonly MarkAsDeliveredUseCase _markAsDeliveredUseCase;
         private readonly MarkAsCanceledUseCase _markAsCanceledUseCase;
+        private readonly MarkAsDeliveredUseCase _markAsDeliveredUseCase;
+        private readonly StartOrderPreparationUseCase _startOrderPreparationUseCase;
 
         public OrderController(
             CreateOrderUseCase createOrderUseCase,
@@ -25,10 +27,12 @@ namespace NordesteFoodAPI.Modules.Orders.API
             StartOrderPreparationUseCase startOrderPreparationUseCase,
             MarkAsReadyUseCase markAsReadyUseCase,
             MarkAsDeliveredUseCase markAsDeliveredUseCase,
-            MarkAsCanceledUseCase markAsCanceledUseCase)
+            MarkAsCanceledUseCase markAsCanceledUseCase,
+            GetOrdersByFilterUseCase getOrdersByFilterUseCase)
         {
             _createOrderUseCase = createOrderUseCase;
             _getOrderByIdUseCase = getOrderByIdUseCase;
+            _getOrdersByFilterUseCase = getOrdersByFilterUseCase;
             _startOrderPreparationUseCase = startOrderPreparationUseCase;
             _markAsReadyUseCase = markAsReadyUseCase;
             _markAsDeliveredUseCase = markAsDeliveredUseCase;
@@ -50,7 +54,7 @@ namespace NordesteFoodAPI.Modules.Orders.API
 
             if (!result.IsSuccess)
             {
-                var statusCodes = result.ErrorType switch 
+                var statusCodes = result.ErrorType switch
                 {
                     ErrorType.ValidationError => StatusCodes.Status400BadRequest,
                     ErrorType.NotFound => StatusCodes.Status404NotFound,
@@ -77,7 +81,7 @@ namespace NordesteFoodAPI.Modules.Orders.API
 
         [HttpGet]
         [Route("search/id/{orderId}")]
-        [Authorize(Policy = "AuthenticatedUser")]
+        [Authorize(Policy = "AuthenticatedUsers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -88,7 +92,7 @@ namespace NordesteFoodAPI.Modules.Orders.API
 
             if (!result.IsSuccess)
             {
-                var statusCode = result.ErrorType switch 
+                var statusCode = result.ErrorType switch
                 {
                     ErrorType.NotFound => StatusCodes.Status404NotFound,
                     ErrorType.DatabaseError => StatusCodes.Status500InternalServerError,
@@ -107,6 +111,39 @@ namespace NordesteFoodAPI.Modules.Orders.API
                 Status = StatusCodes.Status200OK,
                 Data = result.Value,
                 Message = $"O pedido de Id '{orderId}' foi encontrado com sucesso"
+            });
+        }
+
+        [HttpGet]
+        [Route("search/filter")]
+        [Authorize(Policy = "AuthenticatedUsers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetByFilterAsync([FromQuery] OrderFilterRequestDTO orderFilterRequestDTO)
+        {
+            var result = await _getOrdersByFilterUseCase.GetByFiltersAsync(orderFilterRequestDTO);
+
+            if (!result.IsSuccess)
+            {
+                var statusCode = result.ErrorType switch
+                {
+                    ErrorType.NotFound => StatusCodes.Status404NotFound,
+                    _ => StatusCodes.Status500InternalServerError
+                };
+
+                return StatusCode(statusCode, new ApiResponse
+                {
+                    Status = statusCode,
+                    Message = result.ErrorMessage ?? $"Ocorreu um erro inesperado ao tentar buscar pelos pedidos com o filtro fornecido"
+                });
+            }
+
+            return Ok(new ApiResponse<IEnumerable<OrderResponseDTO>>
+            {
+                Status = StatusCodes.Status200OK,
+                Data = result.Value,
+                Message = $"Os pedidos foram encontrados com sucesso"
             });
         }
 

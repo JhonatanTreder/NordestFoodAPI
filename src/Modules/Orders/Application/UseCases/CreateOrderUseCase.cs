@@ -1,4 +1,5 @@
-﻿using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
+﻿using Microsoft.Extensions.Logging;
+using NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.Order;
 using NordesteFoodAPI.Modules.Orders.Domain.DTOs.OrderItem;
 using NordesteFoodAPI.Modules.Orders.Domain.Entities;
@@ -6,7 +7,6 @@ using NordesteFoodAPI.Modules.Orders.Domain.Enums;
 using NordesteFoodAPI.Modules.Restaurants.Domain.Contracts;
 using NordesteFoodAPI.Modules.Stocks.Domain.Contracts;
 using NordesteFoodAPI.Modules.UnitProducts.Domain.Contracts;
-using NordesteFoodAPI.Modules.UnitProducts.Domain.Entities;
 using NordesteFoodAPI.Shared.Common.Results;
 
 namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
@@ -17,17 +17,20 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IUnitProductRepository _unitProductRepository;
         private readonly IStockRepository _stockRepository;
+        private readonly ILogger<CreateOrderUseCase> _logger;
 
         public CreateOrderUseCase(
             IOrderRepository orderRepository,
             IRestaurantRepository restaurantRepository,
             IUnitProductRepository unitProductRepository,
-            IStockRepository stockRepository)
+            IStockRepository stockRepository,
+            ILogger<CreateOrderUseCase> logger)
         {
             _orderRepository = orderRepository;
             _restaurantRepository = restaurantRepository;
             _unitProductRepository = unitProductRepository;
             _stockRepository = stockRepository;
+            _logger = logger;
         }
 
         public async Task<Result<OrderResponseDTO>> CreateAsync(CreateOrderRequestDTO orderRequestDTO, Guid userId)
@@ -137,6 +140,10 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
                 );
             }
 
+            _logger.LogInformation("O pedido foi criado com sucesso. Id do pedido: {OrderId}, Id do usuário: {UserId}, Id do restaurante: {RestaurantId}",
+                order.Id, userId, orderRequestDTO.RestaurantId
+            );
+
             var orderResponseDTO = new OrderResponseDTO(
                 userId,
                 order.Id,
@@ -154,6 +161,7 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
             );
 
             return Result<OrderResponseDTO>.Success(orderResponseDTO);
+
         }
     }
 }

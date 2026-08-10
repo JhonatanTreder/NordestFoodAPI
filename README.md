@@ -219,7 +219,9 @@ Descrição das variáveis:
 
 ## Executando o projeto
 
-> ⚠️ **O projeto deve ser executado localmente.** Os testes (Swagger e Postman) também são feitos localmente — não há ambiente remoto/publicado.
+> ⚠️ **1) O projeto deve ser executado localmente.** Os testes (Swagger e Postman) também são feitos localmente pois não há ambiente remoto/publicado.
+> **2) No postman, verifique se a variável de ambiente `baseUrl` está sendo definida com o valor de "https://localhost:7200". Caso não esteja, defina ela em uma variável de ambiente com esse valor para ser utilizado em todos os endpoints**
+> **OBS: O endpoint usando a variável de ambiente segue esse tipo de padrão: baseUrl/endpoint**. Por exemplo: `https:localhost:7200/Auth/login`
 
 ### Passo a passo
 

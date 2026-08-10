@@ -219,6 +219,10 @@ Descrição das variáveis:
 
 ## Executando o projeto
 
+> ⚠️ **O projeto deve ser executado localmente.** Os testes (Swagger e Postman) também são feitos localmente — não há ambiente remoto/publicado.
+
+### Passo a passo
+
 ```bash
 # 1. Restaurar dependências
 dotnet restore
@@ -229,12 +233,20 @@ dotnet ef database update
 # 3. Executar a aplicação
 dotnet run
 ```
->**OBS: Será necessário rodar o projeto localmente na porta 7200, caso contrário o projeto vai ter problemas para ser inicializado (principalmente na inicialização do Swagger/OpenAPI)
->Para rodar em http simples, você deve utilizar a porta 5000** 
 
-A API ficará disponível em `https://localhost:7200` ou em `http://localhost:5000` para rodar em `http` conforme o arquivo `launchSettings.json`.
+> **OBS:** Será necessário rodar o projeto localmente na porta **7200**, caso contrário o projeto vai ter problemas para ser inicializado (principalmente na inicialização do Swagger/OpenAPI).
+> Para rodar em http simples, você deve utilizar a porta **5000**.
+
+A API ficará disponível em `https://localhost:7200` ou em `http://localhost:5000` para rodar em `http`, conforme o arquivo `launchSettings.json`.
 
 Ao iniciar, o `RoleSeeder` garante a criação das roles (`Client`, `Attendant`, `Kitchen`, `Admin`) caso ainda não existam no banco.
+
+### Como testar após executar
+
+Com a aplicação rodando localmente, há duas formas de testar a API:
+
+- **Swagger**: acesse `https://localhost:7200/swagger` para explorar e testar os endpoints diretamente pelo navegador (veja a seção [Documentação da API (Swagger)](#documentação-da-api-swagger)).
+- **Postman**: é necessário testar a coleção Postman **localmente**, com a aplicação em execução, importando o arquivo `NordesteFoodAPI.postman_collection.json` (veja a seção [Coleção Postman](#coleção-postman)).
 
 ---
 
@@ -249,6 +261,8 @@ https://localhost:7200/swagger
 ---
 
 ## Coleção Postman
+
+> ⚠️ Os testes via Postman devem ser executados **localmente**, com a aplicação em execução na sua máquina (`https://localhost:7200`).
 
 O arquivo `NordesteFoodAPI.postman_collection.json`, na raiz do repositório, contém os cenários de teste organizados em pastas numeradas, na ordem de execução:
 

@@ -24,7 +24,7 @@ namespace NordesteFoodAPI.Modules.Auth.API
         }
 
         [HttpPost]
-        [Authorize(Policy = "AuthenticatedUsers")]
+        [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -33,7 +33,28 @@ namespace NordesteFoodAPI.Modules.Auth.API
         {
             var loginResponse = await _loginUseCase.Login(loginRequest);
 
-            return Ok(loginResponse);
+            if (!loginResponse.IsSuccess)
+            {
+                var statusCode = loginResponse.ErrorType switch
+                {
+                    ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
+                    ErrorType.UnexpectedFailure => StatusCodes.Status500InternalServerError,
+                    _ => StatusCodes.Status500InternalServerError
+                };
+
+                return StatusCode(statusCode, new ApiResponse
+                {
+                    Status = statusCode,
+                    Message = loginResponse.ErrorMessage ?? "Ocorreu um erro inesperado ao tentar realizar o login do usuário"
+                });
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new ApiResponse<LoginResponseDTO>
+            {
+                Status = StatusCodes.Status200OK,
+                Data = loginResponse.Value,
+                Message = "Login realizado com sucesso"
+            });
         }
 
         [HttpPost]

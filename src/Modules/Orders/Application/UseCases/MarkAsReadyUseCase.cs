@@ -7,10 +7,12 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
     public class MarkAsReadyUseCase
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly ILogger<MarkAsReadyUseCase> _logger;
 
-        public MarkAsReadyUseCase(IOrderRepository orderRepository)
+        public MarkAsReadyUseCase(IOrderRepository orderRepository, ILogger<MarkAsReadyUseCase> logger)
         {
             _orderRepository = orderRepository;
+            _logger = logger;
         }
 
         public async Task<Result> MarkAsReadyAsync(Guid orderId)
@@ -46,6 +48,8 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
                     updateOrderResult.ErrorType
                 );
             }
+
+            _logger.LogInformation("O pedido de Id '{OrderId}' foi marcado como preparado com sucesso.", orderId);
 
             return Result.Success();
         }

@@ -6,5 +6,6 @@ namespace NordesteFoodAPI.Shared.Infraestructure.Identity
     {
         public string Name { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+        public bool LgpdConsentGiven { get; set; }
     }
 }

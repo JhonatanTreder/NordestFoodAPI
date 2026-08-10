@@ -7,6 +7,7 @@ namespace NordesteFoodAPI.Modules.Orders.Domain.Contracts.Repositories
     {
         Task<Result<Order>> CreateAsync(Order order);
         Task<Order?> FindByIdAsync(Guid orderId);
+        Task<Result<IEnumerable<Order>>> FindByFilterAsync(string? orderChannel, string? status, int page, int limit);
         Task<Result<Order>> UpdateAsync(Order order);
     }
 }

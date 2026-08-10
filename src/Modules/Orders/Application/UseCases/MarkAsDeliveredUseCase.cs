@@ -7,10 +7,12 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
     public class MarkAsDeliveredUseCase
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly ILogger<MarkAsDeliveredUseCase> _logger;
 
-        public MarkAsDeliveredUseCase(IOrderRepository orderRepository)
+        public MarkAsDeliveredUseCase(IOrderRepository orderRepository, ILogger<MarkAsDeliveredUseCase> logger)
         {
             _orderRepository = orderRepository;
+            _logger = logger;
         }
 
         public async Task<Result> MarkAsDeliveredAsync(Guid orderId)
@@ -46,6 +48,8 @@ namespace NordesteFoodAPI.Modules.Orders.Application.UseCases
                     updateOrderResult.ErrorType
                 );
             }
+
+            _logger.LogInformation("O pedido de Id '{OrderId}' foi entregue com sucesso.", orderId);
 
             return Result.Success();
         }

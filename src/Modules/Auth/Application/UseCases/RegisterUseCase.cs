@@ -23,7 +23,8 @@ namespace NordesteFoodAPI.Modules.Auth.Application.UseCases
                 Email = registerUserDTO.Email,
                 PhoneNumber = registerUserDTO.PhoneNumber,
                 Name = registerUserDTO.Username,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                LgpdConsentGiven = registerUserDTO.LgpdConsentGiven
             };
 
             var existingUserByEmail = await _userManager.FindByEmailAsync(registerUserDTO.Email);

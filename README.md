@@ -229,6 +229,7 @@ dotnet ef database update
 # 3. Executar a aplicação
 dotnet run
 ```
+>**OBS: Será necessário rodar o projeto localmente na porta 7200, caso contrário o projeto vai ter problemas para ser inicializado (principalmente na inicialização do Swagger/OpenAPI)** 
 
 A API ficará disponível em `https://localhost:7200` (conforme `launchSettings.json`).
 
